@@ -1,4 +1,4 @@
-package oak.control.transitions
+package transitions
 {
 	public class TransitionDirections
 	{
@@ -15,6 +15,6 @@ package oak.control.transitions
 		static public const TURN_LEFT:String = "turnLeft";
 		static public const TURN_RIGHT:String = "turnRight";
 		
-		static public const ALL_TYPES : Array = [LEFT, RIGHT, TOP, BOTTOM, FORWARD, BACKWARD, TURN_LEFT, TURN_RIGHT];
+		static public const ALL_TYPES:Array = [LEFT, RIGHT, TOP, BOTTOM, FORWARD, BACKWARD, TURN_LEFT, TURN_RIGHT];
 	}
 }   

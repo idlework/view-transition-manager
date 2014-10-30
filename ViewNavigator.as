@@ -1,81 +1,21 @@
-package oak.control
+package
 {
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.errors.IllegalOperationError;
 	
-	import oak.control.stateMachine.StateMachine;
-	import oak.control.stateMachine.StateMachineEvent;
-	import oak.control.transitions.TransitionModel;
-	import oak.interfaces.IDestroyable;
-	
-	/**
-	  A "view stack"-like container that supports navigation between views
-	  (any display object) through events. 
-	   
-	  private const FIRST_VIEW:String = "firstView";
-		private const SECOND_VIEW:String = "secondView";
-		private const THIRD_VIEW:String = "thirdView";
-		private const FOURTH_VIEW:String = "fourthView";
-		
-		private var _views:Array = [FIRST_VIEW, SECOND_VIEW, THIRD_VIEW, FOURTH_VIEW];
-		
-		private var _navigator:ViewNavigator;
-		private var _transitionManager:ViewTransitionManager;
-		
-		public function ViewSwitcher()
-		{
-			addEventListener(Event.ADDED_TO_STAGE, _addedToStageHandler);
-		}
-		
-		private function _addedToStageHandler(event:Event):void
-		{
-			removeEventListener(Event.ADDED_TO_STAGE, _addedToStageHandler);
-			
-			stage.addEventListener(KeyboardEvent.KEY_UP, _keyUpHandler);
-			
-			_navigator = new ViewNavigator();
-			addChild(_navigator);
-			
-			_navigator.addView(FIRST_VIEW, new ViewNavigatorItem(FirstView));
-			_navigator.addView(SECOND_VIEW, new ViewNavigatorItem(SecondView));
-			_navigator.addView(THIRD_VIEW, new ViewNavigatorItem(ThirdView));
-			_navigator.addView(FOURTH_VIEW, new ViewNavigatorItem(FourthView));
-			_navigator.showView(FIRST_VIEW);
-			
-			_transitionManager = new ViewTransitionManager(_navigator);
-			_transitionManager.duration = .4;
-			_transitionManager.ease = Cubic.easeInOut;
-		}
-		
-		private function _keyUpHandler(event:KeyboardEvent):void
-		{
-			if (_transitionManager.isRunning) return;
-			
-			var model:TransitionStackModel = new TransitionStackModel(TransitionDirections.ALL_TYPES[Random.integer(0, 3)]);
-			
-			_navigator.showView(_views[Random.integer(0, 3)], model);
-		}
-	 */
+	import transitions.TransitionModel;
 	 
-	 [Event(name="viewNavigatorChange", type="oak.control.ViewNavigatorEvent")]
-	 [Event(name="viewNavigatorChanged", type="oak.control.ViewNavigatorEvent")]
-	 
-	 [Event(name="transitionComplete", type="oak.control.stateMachine.StateMachineEvent")]
-	 [Event(name="transitionDenied", type="oak.control.stateMachine.StateMachineEvent")]
+	[Event(name="viewNavigatorChange", type="ViewNavigatorEvent")]
+	[Event(name="viewNavigatorChanged", type="ViewNavigatorEvent")]
 	 
 	public class ViewNavigator extends Sprite
-	{
-		private var _stateMachine:StateMachine
-		
+	{		
 		/**
 		 * Constructor.
 		 */
 		public function ViewNavigator()
 		{
-			_stateMachine = new StateMachine();
-			_stateMachine.addEventListener(StateMachineEvent.TRANSITION_DENIED, dispatchEvent);
-			_stateMachine.addEventListener(StateMachineEvent.TRANSITION_COMPLETE, dispatchEvent);
 		}
 
 		/**
@@ -129,14 +69,6 @@ package oak.control
 			}
 			_clipContent = value;
 		}
-
-		/**
-		 * check if transition is allowed by statemachine.
-		 */
-		public function transitionAllowed(id:String):Boolean
-		{
-			return _stateMachine.canChangeStateTo(id);
-		}
 		
 		/**
 		 * A function that is called when the <code>ViewNavigator</code> is
@@ -184,12 +116,11 @@ package oak.control
 				return null;
 			}
 			
-			if (_activeView && !transitionAllowed(id))
+			if (_activeView)
 			{
 				return _activeView;
 			}
 			
-			_stateMachine.changeState(id);
 
 			_previousViewInTransition = _activeView;
 			_previousViewInTransitionID = _activeViewID;
@@ -206,8 +137,6 @@ package oak.control
 
 			_transitionIsActive = true;
 			transition(_previousViewInTransition, _activeView, transitionComplete, model);
-
-			_stateMachine.initialState = _activeViewID;
 			
 			dispatchEvent(new ViewNavigatorEvent(ViewNavigatorEvent.CHANGE));
 			
@@ -271,7 +200,7 @@ package oak.control
 		/**
 		 * Registers a new view by its identifier.
 		 */
-		public function addView(id:String, item:ViewNavigatorItem, stateData:Object = null):void
+		public function addView(id:String, item:ViewNavigatorItem):void
 		{
 			if(_views.hasOwnProperty(id))
 			{
@@ -285,13 +214,6 @@ package oak.control
 			}
 
 			_views[id] = item;
-			
-			if (!stateData)
-			{
-				stateData = {from: "*"};
-			}
-			
-			_stateMachine.addState(id, stateData);
 		}
 
 		/**

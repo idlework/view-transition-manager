@@ -1,4 +1,4 @@
-package oak.control.transitions
+package transitions
 {
 	import com.gskinner.motion.GTween;
 	
@@ -7,7 +7,7 @@ package oak.control.transitions
 	
 	public class TransitionStackModel extends TransitionModel
 	{
-		public function TransitionStackModel(direction:String="")
+		public function TransitionStackModel(direction:String = "")
 		{
 			super(direction);
 		}

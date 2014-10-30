@@ -1,10 +1,10 @@
-package oak.control
+package
 {
 	import com.gskinner.motion.easing.Sine;
 	
 	import flash.display.DisplayObject;
 	
-	import oak.control.transitions.TransitionModel;
+	import transitions.TransitionModel;
 	
 	/**
 	 * A transition for <code>ViewNavigator</code> that slides out the old

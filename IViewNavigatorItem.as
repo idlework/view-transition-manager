@@ -1,4 +1,4 @@
-package oak.control
+package
 {
 	public interface IViewNavigatorItem
 	{

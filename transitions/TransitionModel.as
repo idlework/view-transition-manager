@@ -1,4 +1,4 @@
-package oak.control.transitions
+package transitions
 {
 	import com.gskinner.motion.GTween;
 	
@@ -6,7 +6,7 @@ package oak.control.transitions
 	import flash.display.Sprite;
 	import flash.events.EventDispatcher;
 	
-	import oak.control.IViewTransition;
+	import IViewTransition;
 
 	public class TransitionModel extends EventDispatcher
 	{
